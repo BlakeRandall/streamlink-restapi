@@ -1,0 +1,27 @@
+name: Build
+on:
+  pull_request:
+    branches:
+      - 'master'
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Python Setup
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+      - name: Python Packages
+        run: |
+          pip install --no-cache-dir --upgrade --requirement ${{ github.workspace }}/requirements.txt --requirement ${{ github.workspace }}/requirements/non_prod.txt
+      - name: Pylint
+        run: |
+          pylint -r y -s y -v --exit-zero streamlinkrestapi
+        continue-on-error: true
+      - name: Pytest
+        run: |
+          pytest --cov-branch --cov=streamlinkrestapi tests/
+        continue-on-error: true

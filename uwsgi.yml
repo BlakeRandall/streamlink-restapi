@@ -1,0 +1,7 @@
+uwsgi:
+  module: streamlinkrestapi.app
+  callable: app
+  need-app: true
+  master: true
+  enable-threads: True
+  http: :8080
